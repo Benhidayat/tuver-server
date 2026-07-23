@@ -1,0 +1,37 @@
+services:
+  server:
+    image: tuver-server
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 127.0.0.1:3000:3000
+    environment:
+      DATABASE_URL: postgresql://benh:root@db:5432/tuverdb_dev?schema=public
+    container_name: tuver-server
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  db:
+    image: postgres:18
+    ports:
+      - 127.0.0.1:5432:5432
+    environment:
+      POSTGRES_USER: benh
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: tuverdb_dev
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U benh -d tuverdb_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  postgres_dev_data:

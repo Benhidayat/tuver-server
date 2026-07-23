@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Bank {
+  id        Int        @id @default(autoincrement())
+  name      String
+  country   String
+  status    BankStatus @default(ACTIVE)
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  domains   Domain[]
+
+  @@unique([name, country])
+  @@map("banks")
+}
+
+model Domain {
+  id     Int    @id @default(autoincrement())
+  domain String @unique
+
+  bankId Int
+  bank   Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
+
+  @@map("domains")
+}
+
+enum BankStatus {
+  ACTIVE   @map("active")
+  INACTIVE @map("inactive")
+
+  @@map("bank_status")
+}

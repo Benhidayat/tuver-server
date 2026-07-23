@@ -1,0 +1,11 @@
+.dockerignore
+.gitignore
+.git
+
+dist/
+node_modules/
+
+
+dev.Dockerfile
+Dockerfile
+compose.dev.yaml
