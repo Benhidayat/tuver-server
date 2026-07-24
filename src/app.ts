@@ -1,10 +1,10 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { prisma } from './db/prisma.ts';
+import { prisma } from './db/prisma.js';
 import morgan from 'morgan';
 
-import notFound from './middleware/notFound.ts';
-import errorHandler from './middleware/errorHandler.ts';
+import notFound from './middleware/notFound.js';
+import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
