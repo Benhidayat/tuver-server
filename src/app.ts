@@ -1,15 +1,20 @@
 import express from 'express';
 import type { Request, Response } from 'express';
-import { requestLogger } from './middleware/middleware.ts';
-import { prisma } from './db/prisma.ts'
+import { prisma } from './db/prisma.ts';
+import morgan from 'morgan';
 
 import notFound from './middleware/notFound.ts';
 import errorHandler from './middleware/errorHandler.ts';
 
 const app = express();
 
-app.use(requestLogger);
-
+if (process.env.NODE_ENV === 'development') {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    app.use(morgan('dev'));
+} else {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+    app.use(morgan('combined'));
+}
 app.use(express.json());
 
 app.get('/', (_req: Request, res: Response) => {
@@ -34,5 +39,8 @@ app.get('/banks', async (_req: Request, res: Response) => {
 
 // 404 handler
 app.use(notFound)
+
+// error handler
+app.use(errorHandler)
 
 export default app;
