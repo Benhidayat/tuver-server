@@ -1,4 +1,4 @@
-import { prisma } from '../src/db/prisma.ts';
+import { prisma } from '../src/db/prisma.js';
 
 export const main = async () => {
     const bank = await prisma.bank.upsert({

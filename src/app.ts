@@ -2,19 +2,19 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import { prisma } from './db/prisma.js';
 import morgan from 'morgan';
+import { env } from './middleware/config.js';
 
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 
 const app = express();
 
-if (process.env.NODE_ENV === 'development') {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    app.use(morgan('dev'));
-} else {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+if (env.NODE_ENV === 'production') {
     app.use(morgan('combined'));
+} else {
+    app.use(morgan('dev'));
 }
+
 app.use(express.json());
 
 app.get('/', (_req: Request, res: Response) => {
