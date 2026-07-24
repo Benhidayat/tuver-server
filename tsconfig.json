@@ -42,7 +42,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "allowImportingTsExtensions": true
   },
   "include": ["**/*.ts", "prisma.config.ts"],
   "exclude": ["dist"]
