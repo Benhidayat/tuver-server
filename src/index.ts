@@ -1,7 +1,6 @@
 import app from "./app.js";
+import { env } from "./middleware/config.js";
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-    console.log(`Server is listening on http://localhost:${PORT}`);
+app.listen(env.PORT, () => {
+    console.log(`Server is listening on http://localhost:${env.PORT}`);
 });
