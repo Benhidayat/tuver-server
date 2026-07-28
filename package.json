@@ -10,7 +10,7 @@
     "start": "node ./dist/index.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "seed": "tsx ./lib/scripts.ts"
+    "seed": "tsx ./scripts/seed.ts"
   },
   "repository": {
     "type": "git",
@@ -29,8 +29,10 @@
     "@prisma/client": "^7.9.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "http-status-codes": "^2.3.0",
     "morgan": "^1.11.0",
-    "pg": "^8.22.0"
+    "pg": "^8.22.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
