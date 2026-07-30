@@ -1,5 +1,5 @@
 import z from 'zod';
 
 export const VerifyUrlSchema = z.object({
-    domain: z.string()
+    message: z.string().trim().min(1),
 });
