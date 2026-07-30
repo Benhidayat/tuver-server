@@ -1,13 +1,17 @@
 import express from 'express';
 import type { Request, Response } from 'express';
 import morgan from 'morgan';
-import { env } from './middleware/config.js';
+import helmet from 'helmet';
 
+
+import { env } from './middleware/config.js';
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
 import verifyRouter from './modules/verify/verify.routes.js';
 
 const app = express();
+
+app.use(helmet());
 
 if (env.NODE_ENV === 'production') {
     app.use(morgan('combined'));
