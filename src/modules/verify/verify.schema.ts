@@ -1,5 +1,5 @@
 import z from 'zod';
 
-export const VerifyUrlSchema = z.object({
+export const VerifyMessageSchema = z.object({
     message: z.string().trim().min(1),
 });
