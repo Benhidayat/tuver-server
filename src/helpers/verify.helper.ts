@@ -1,22 +1,28 @@
 import { parse } from 'tldts';
-import type { GetUrlDetailType } from "../modules/verify/verify.types.js";
+import type { MessageUrlDetail } from "../modules/verify/verify.types.js";
 
-const URL_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA-Z]{2,}(?:\/[^\s)]*)?/g;
+const URL_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA-Z]{2,}(?:\/[^\s)]*)?/;
 
+const IP_PATTERN = /\b(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}\b/;
 
 const extractUrl = (message: string): string | null => {
     return message.match(URL_PATTERN)?.[0] ?? null;
 };
 
-export const getUrlDetail = (message: string): GetUrlDetailType=> {
+const hasIpAddress = (message: string): boolean => {
+    return IP_PATTERN.test(message);
+};
+
+export const getMessageUrlDetail = (message: string): MessageUrlDetail=> {
 
     const extractedUrl = extractUrl(message);
+    const hasIp = hasIpAddress(message);
 
     if (!extractedUrl) {
         return {
             domain: null,
+            hasIp,
             subdomains: [],
-
         }
     }
 
@@ -24,6 +30,7 @@ export const getUrlDetail = (message: string): GetUrlDetailType=> {
 
     return {
         domain: parsedUrl.domain,
+        hasIp,
         subdomains: parsedUrl.subdomain?.split('.') ?? [],
     };
 };

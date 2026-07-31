@@ -2,5 +2,5 @@ POST http://localhost:3000/api/verify
 Content-Type: application/json
 
 {
-    "domain": "bri.co.id"
+    "message": "asaf gssfgs grjg bri.co.id"
 }
