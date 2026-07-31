@@ -13,5 +13,6 @@ export type VerifyResult =
 export interface MessageUrlDetail {
     domain: string | null,
     hasIp: boolean,
-    subdomains: string[]
+    subdomains: string[],
+    hasNestedUrl: boolean
 };

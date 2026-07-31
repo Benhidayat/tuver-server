@@ -2,14 +2,16 @@ import type { Request, Response } from "express";
 import * as verifyService from './verify.service.js';
 import { StatusCodes } from "http-status-codes";
 
-import { VerifyUrlSchema } from "./verify.schema.js";
+import { VerifyMessageSchema } from "./verify.schema.js";
 import { getMessageUrlDetail } from "../../helpers/verify.helper.js";
 
 export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
 
-    const body = VerifyUrlSchema.parse(req.body);
+    const { message } = VerifyMessageSchema.parse(req.body);
 
-    const urlDetail = getMessageUrlDetail(body.message);
+    const urlDetail = getMessageUrlDetail(message);
+
+    console.log('url detail', urlDetail);
 
     if (urlDetail.hasIp) {
         res.status(StatusCodes.OK).json({
