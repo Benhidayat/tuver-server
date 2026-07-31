@@ -1,11 +1,17 @@
 import type { Bank } from "../../../generated/prisma/client.js";
 
-export type VerifyDomainResult = {
-    verified: boolean,
-    bank: Bank | null
-}
+export type VerifyResult = 
+    | {
+        verified: true,
+        bank: Bank
+      }
+    | {
+        verified: false,
+        bank: null
+      };
 
-export interface GetUrlDetailType {
+export interface MessageUrlDetail {
     domain: string | null,
+    hasIp: boolean,
     subdomains: string[]
 };
