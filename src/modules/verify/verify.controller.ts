@@ -4,10 +4,21 @@ import { StatusCodes } from "http-status-codes";
 
 import { VerifyMessageSchema } from "./verify.schema.js";
 import { getMessageUrlDetail } from "../../helpers/verify.helper.js";
+import { locales } from "../../locales/index.js";
+import { getLocale } from "../../locales/locale.js";
 
 export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
 
     const { message } = VerifyMessageSchema.parse(req.body);
+
+    const lang = getLocale(req);
+    const t = locales[lang];
+
+    console.log('accept-language', req.get("accept-language"));
+    console.log('Resolved language', req.acceptsLanguages("id", "en"));
+    console.log('headers', req.headers);
+    console.log('raw headers', req.rawHeaders);
+    console.log('acceplanguage', req.acceptsLanguages());
 
     const urlDetail = getMessageUrlDetail(message);
 
@@ -17,7 +28,7 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
         res.status(StatusCodes.OK).json({
             hasIp: urlDetail.hasIp,
             verified: false,
-            message: 'Warning: This message contains a link that uses an IP address instead of a domain. Legitimate organizations rarely send links like this. Proceed with caution.',
+            message: t.ipWarning,
             bank: null,
         });
         return;
@@ -27,7 +38,7 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
         res.status(StatusCodes.OK).json({
             hasIp: urlDetail.hasIp,
             verified: false,
-            message:'No URL found in the message',
+            message:t.noUrl,
             bank: null
         });
         return;
@@ -39,7 +50,7 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
     if (!result.verified) {
         res.status(StatusCodes.OK).json({
             verified: result.verified,
-            message: `This domain ${urlDetail.domain} could not verified as an official domain`,
+            message: t.domainNotVerified,
             hasIp: urlDetail.hasIp,
             bank: null
         });
@@ -48,7 +59,7 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
 
     res.status(StatusCodes.OK).json({
         verified: true,
-        message: `This domain is the offical domain of ${result.bank.name}.`,
+        message: t.domainVerified(result.bank.name),
         hasIp: urlDetail.hasIp,
         bank: result.bank
     })
