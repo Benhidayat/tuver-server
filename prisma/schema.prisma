@@ -12,7 +12,7 @@ datasource db {
   provider = "postgresql"
 }
 
-model Bank {
+model FinancialInstitution {
   id        Int        @id @default(autoincrement())
   name      String
   country   String
@@ -20,19 +20,30 @@ model Bank {
   createdAt DateTime   @default(now()) @map("created_at")
   updatedAt DateTime   @updatedAt @map("updated_at")
   domains   Domain[]
+  aliases   Alias[]
 
   @@unique([name, country])
-  @@map("banks")
+  @@map("financial_institutions")
 }
 
 model Domain {
   id     Int    @id @default(autoincrement())
   domain String @unique
 
-  bankId Int
-  bank   Bank @relation(fields: [bankId], references: [id], onDelete: Cascade)
+  institutionId Int
+  institution   FinancialInstitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
   @@map("domains")
+}
+
+model Alias {
+  id            Int                  @id @default(autoincrement())
+  alias         String
+  institutionId Int
+  institution   FinancialInstitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@unique([alias, institutionId])
+  @@map("aliases")
 }
 
 enum BankStatus {

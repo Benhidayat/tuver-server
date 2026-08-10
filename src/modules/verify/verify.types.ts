@@ -1,10 +1,10 @@
-import type { Bank } from "../../../generated/prisma/client.js";
+import type { FinancialInstitution } from "../../../generated/prisma/client.js";
 import type { locales } from "../../locales/index.js";
 
 export type VerifyResult = 
     | {
         verified: true,
-        bank: Bank
+        bank: FinancialInstitution
       }
     | {
         verified: false,
