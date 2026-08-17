@@ -10,7 +10,8 @@
     "start": "node ./dist/index.js",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-    "seed": "tsx ./scripts/seed.ts"
+    "seed": "tsx ./scripts/seed.ts",
+    "test:unit": "vitest"
   },
   "repository": {
     "type": "git",
@@ -46,7 +47,8 @@
     "prisma": "^7.9.0",
     "tsx": "^4.23.1",
     "typescript": "^5.9.2",
-    "typescript-eslint": "^8.64.0"
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   },
   "eslint.experimental.useFlatConfig": true,
   "editor.codeActionsOnSave": {
