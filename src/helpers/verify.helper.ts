@@ -5,7 +5,7 @@ const URL_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA
 
 const IP_PATTERN = /\b(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}\b/;
 
-const extractUrl = (message: string): string | null => {
+export const extractUrl = (message: string): string | null => {
     return message.match(URL_PATTERN)?.[0] ?? null;
 };
 
