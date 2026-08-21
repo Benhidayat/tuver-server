@@ -13,6 +13,15 @@ const hasIpAddress = (message: string): boolean => {
     return IP_PATTERN.test(message);
 };
 
+const extractedMessage = (message: string) => message.replace(URL_PATTERN, '').trim();
+
+export const normalizeTextAndAliases = (text: string): string => {
+    return text.toLocaleLowerCase()
+        .replace(/[^\p{L}\p{N}\s]/gu, ' ')
+        .replace(/\s+/g, " ")
+        .trim()
+};
+
 const containUrlInQuery = (url: string): boolean => {
     // make sure url has https schema
     const normalizedUrl = /^https?:\/\//.test(url)
@@ -39,13 +48,15 @@ export const getMessageUrlDetail = (message: string): MessageUrlDetail => {
 
     const extractedUrl = extractUrl(message);
     const hasIp = hasIpAddress(message);
+    const textWithoutUrl = extractedMessage(message);
 
     if (!extractedUrl) {
         return {
             domain: null,
             hasIp,
             subdomains: [],
-            hasNestedUrl: false
+            hasNestedUrl: false,
+            textWithoutUrl,
         }
     }
 
@@ -57,5 +68,6 @@ export const getMessageUrlDetail = (message: string): MessageUrlDetail => {
         hasIp,
         hasNestedUrl,
         subdomains: parsedUrl.subdomain?.split('.') ?? [],
+        textWithoutUrl
     };
 };

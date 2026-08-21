@@ -4,5 +4,5 @@ Content-Type: application/json
 
 
 {
-    "message": "asaf gssfgs grjg bri.co.id"
+    "message": "asaf bri gssfgs grjg https://www.bri.co.id"
 }

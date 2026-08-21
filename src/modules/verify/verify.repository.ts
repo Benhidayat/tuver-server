@@ -14,4 +14,15 @@ export const findDomain = async (domain: string) => {
     });
 
     return result?.institution ?? null;
-}
+};
+
+export const getAllAliases = async() => {
+    const result = await prisma.alias.findMany({
+        include: {
+            institution: true,
+        }
+    });
+       
+
+    return result;
+};
