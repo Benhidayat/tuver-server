@@ -15,7 +15,8 @@ export interface MessageUrlDetail {
     domain: string | null,
     hasIp: boolean,
     subdomains: string[],
-    hasNestedUrl: boolean
+    hasNestedUrl: boolean,
+    textWithoutUrl: string
 };
 
 export interface LocalType {

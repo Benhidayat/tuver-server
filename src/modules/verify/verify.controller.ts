@@ -14,19 +14,14 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
     const lang = getLocale(req);
     const t = locales[lang];
 
-    console.log('accept-language', req.get("accept-language"));
-    console.log('Resolved language', req.acceptsLanguages("id", "en"));
-    console.log('headers', req.headers);
-    console.log('raw headers', req.rawHeaders);
-    console.log('acceplanguage', req.acceptsLanguages());
+    const messageDetail = getMessageUrlDetail(message);
 
-    const urlDetail = getMessageUrlDetail(message);
+    console.log('url detail', messageDetail);
 
-    console.log('url detail', urlDetail);
-
-    if (urlDetail.hasIp) {
+    // ip found
+    if (messageDetail.hasIp) {
         res.status(StatusCodes.OK).json({
-            hasIp: urlDetail.hasIp,
+            hasIp: messageDetail.hasIp,
             verified: false,
             message: t.ipWarning,
             bank: null,
@@ -34,33 +29,59 @@ export const verifyUrl = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    if (!urlDetail.domain) {
+    // no domain found
+    if (!messageDetail.domain) {
         res.status(StatusCodes.OK).json({
-            hasIp: urlDetail.hasIp,
+            hasIp: messageDetail.hasIp,
             verified: false,
             message:t.noUrl,
             bank: null
         });
         return;
     };
-    
-    
-   const result = await verifyService.verifyUrl(urlDetail.domain);
 
-    if (!result.verified) {
+    // found nested url in the query
+    if(messageDetail.hasNestedUrl) {
         res.status(StatusCodes.OK).json({
-            verified: result.verified,
-            message: t.domainNotVerified,
-            hasIp: urlDetail.hasIp,
+            hasIp: messageDetail.hasIp,
+            verified: false,
+            message: t.nestedUrlWarning,
             bank: null
         });
         return;
-    };
+    }
+    
+    
+   const urlResult = await verifyService.verifyUrl(messageDetail.domain);
+
+    if (!urlResult.verified) {
+
+        const messageResult = await verifyService.verifyMessage(messageDetail.textWithoutUrl);
+        
+        if (!messageResult) {
+            res.status(StatusCodes.OK).json({
+                verified: urlResult.verified,
+                message: t.noDomainNoAlias,
+                hasIp: messageDetail.hasIp,
+                bank: null
+            });
+            return;
+
+        } else {
+            res.status(StatusCodes.OK).json({
+                verified: urlResult.verified,
+                message: t.noDomainAliasFound(messageResult.institution.name),
+                hasIp: messageDetail.hasIp,
+                bank: null
+            });
+            return;
+        }
+    }
 
     res.status(StatusCodes.OK).json({
         verified: true,
-        message: t.domainVerified(result.bank.name),
-        hasIp: urlDetail.hasIp,
-        bank: result.bank
+        message: t.domainVerified(urlResult.bank.name),
+        hasIp: messageDetail.hasIp,
+        bank: urlResult.bank
     })
 };
