@@ -15,15 +15,18 @@
 // };
 
 export const id = {
-    noUrl: "Tidak ditemukan URL dalam pesan",
+    nothingToVerify: "Tidak ditemukan URL atau nomor telepon dalam pesan",
     ipWarning:
-        "Peringatan: Pesan ini berisi alamat IP, bukan URL, yang jarang digunakan oleh organisasi resmi. Hindari tautan ini.",
-    domainVerified: (institution: string) =>
-        `Pesan ini berisi domain resmi ${institution}.`,
-    noDomainNoAlias:
-        "Domain ini tidak dapat diverifikasi sebagai domain resmi",
-    noDomainAliasFound: (institution: string) =>
-        `Pesan ini berisi URL yang bukan merupakan domain resmi ${institution}. Hindari tautan ini.`,
+        "Peringatan: Pesan ini berisi URL yg menggunakan alamat IP. Hindari tautan ini.",
+    domainNotVerified:
+        "Domain ini tidak dapat diverifikasi sebagai domain resmi institusi keuangan",
+    domainNotOfficial: (institution: string) =>
+        `Peringatan: Pesan ini berisi URL yang bukan merupakan domain resmi ${institution}. Hindari mengungjungi tautan dalam pesan ini.`,
+    phoneNotVerified: "Pesan ini berisi Nomor telepon yang tidak dapat diverifikasi sebagai nomor telepon resmi institusi keuangan.",
+    phoneNotOfficial: (institution: string) =>
+        `Peringatan: Pesan ini berisi nomor telepon yg bukan merupakan nomor telepon resmi ${institution}. Hindari menghubungi nomor telepon`,
+    allVerified: (institution: string) => 
+        `Semua tautan dan nomor telepon di dalam pesan ini telah diverifikasi sebagai milik resmi ${institution}`,
     nestedUrlWarning:
         "Peringatan: Tautan ini berisi URL lain dalam parameternya, yang dapat menyembunyikan tujuan akhir tautan. Hindari tautan ini.",
 };

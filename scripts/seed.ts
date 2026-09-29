@@ -1,11 +1,12 @@
 import { prisma } from '../src/db/prisma.js';
+import { normalizePhoneNumber } from '../src/shared/phone.js';
 
 export const main = async () => {
     const bank = await prisma.financialInstitution.upsert({
         where: {
             name_country: {
                 name: 'PT Bank Rakyat Indonesia',
-                country: 'Indonesia',
+                country: 'ID',
                 
             },
         },
@@ -18,6 +19,11 @@ export const main = async () => {
                     domain: 'bri.co.id'
                 }
             },
+            telephones: {
+                create: {
+                    number: normalizePhoneNumber('(021) 2510244', 'ID')
+                }
+            },
             aliases: {
                 create: [
                     { alias: 'bri' },
@@ -27,6 +33,7 @@ export const main = async () => {
         },
         include: {
             domains: true,
+            telephones: true,
             aliases: true,
         },
     });

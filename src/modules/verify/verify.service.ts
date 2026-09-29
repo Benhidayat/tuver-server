@@ -1,8 +1,8 @@
 import * as bankRepository from './verify.repository.js';
-import type { VerifyResult } from './verify.types.js';
+// import type { VerifyResult } from './verify.types.js';
 import { normalizeTextAndAliases } from '../../helpers/verify.helper.js';
 
-export const verifyUrl = async(domain: string): Promise<VerifyResult> => {
+export const verifyUrl = async(domain: string) => {
     
     const bank = await bankRepository.findDomain(domain);
     
@@ -19,7 +19,6 @@ export const verifyUrl = async(domain: string): Promise<VerifyResult> => {
     };
 };
 
-
 export const verifyMessage = async (message: string) => {
 
     const normalizedMessage = normalizeTextAndAliases(message);
@@ -32,9 +31,25 @@ export const verifyMessage = async (message: string) => {
         const searchableAlias = ` ${normalizedAlias} `;
 
         if (searchableMessage.includes(searchableAlias)) {
-            return alias
+            return alias.institution
         };
     }
 
     return null;
+};
+
+export const verifyNumber = async(number: string) => {
+    const bank = await bankRepository.findPhone(number);
+
+    if (!bank) {
+        return {
+            verified: false,
+            bank: null
+        }
+    }
+
+    return {
+        verified: true,
+        bank
+    }
 };

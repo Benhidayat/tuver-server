@@ -8,12 +8,18 @@ export class AppError extends Error {
     ) {
         super(message);
         this.name = this.constructor.name;
-        Error.captureStackTrace(this, this.constructor)
+        Error.captureStackTrace(this, this.constructor);
     };
 };
 
 export class NotFoundError extends AppError {
-    constructor(message = 'Resouce not found') {
+    constructor(message = 'Resource not found') {
         super(message, StatusCodes.NOT_FOUND)
+    };
+};
+
+export class BadRequestError extends AppError {
+    constructor(message = 'Bad request') {
+        super(message, StatusCodes.BAD_REQUEST)
     };
 };

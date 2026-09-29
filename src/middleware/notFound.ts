@@ -6,7 +6,7 @@ const notFound = (
     _res: Response,
     next: NextFunction
 ) => {
-    const error = new AppError(404, `Route ${req.originalUrl} not found`);
+    const error = new AppError(`Route ${req.originalUrl} not found`, 404);
     next(error);
 };
 
