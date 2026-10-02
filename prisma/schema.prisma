@@ -13,32 +13,47 @@ datasource db {
 }
 
 model FinancialInstitution {
-  id        Int        @id @default(autoincrement())
-  name      String
-  country   String
-  status    BankStatus @default(ACTIVE)
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
-  domains   Domain[]
-  aliases   Alias[]
+  id         Int         @id @default(autoincrement())
+  name       String
+  country    String
+  status     BankStatus  @default(ACTIVE)
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  domains    Domain[]
+  aliases    Alias[]
+  telephones Telephone[]
 
   @@unique([name, country])
   @@map("financial_institutions")
 }
 
 model Domain {
-  id     Int    @id @default(autoincrement())
-  domain String @unique
-
+  id            Int                  @id @default(autoincrement())
+  domain        String               @unique
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
   institutionId Int
   institution   FinancialInstitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 
   @@map("domains")
 }
 
+model Telephone {
+  id            Int                  @id @default(autoincrement())
+  number        String               @unique
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
+  institutionId Int
+  institution   FinancialInstitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
+
+  @@map("telephones")
+}
+
 model Alias {
   id            Int                  @id @default(autoincrement())
   alias         String
+  createdAt     DateTime             @default(now()) @map("created_at")
+  updatedAt     DateTime             @updatedAt @map("updated_at")
   institutionId Int
   institution   FinancialInstitution @relation(fields: [institutionId], references: [id], onDelete: Cascade)
 

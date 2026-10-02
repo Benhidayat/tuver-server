@@ -1,8 +1,9 @@
 POST http://localhost:3000/api/verify
 Content-Type: application/json
-# Accept-Language: id
+Accept-Language: id
 
 
 {
-    "message": "asaf bri gssfgs grjg https://www.bri.co.id"
+    "message": "asaf bri gssfgs grjg https://www.bri.co.id https://evil.com",
+    "country": "ID"
 }

@@ -7,13 +7,31 @@ export const findDomain = async (domain: string) => {
             institution: {
                 include: {
                     domains: true,
-                    aliases: true
+                    aliases: true,
+                    telephones: true
                 },
             },
         },
     });
 
     return result?.institution ?? null;
+};
+
+export const findPhone = async(number: string) => {
+    const result = await prisma.telephone.findUnique({
+        where: { number },
+        include: {
+            institution: {
+                include: {
+                    domains: true,
+                    telephones: true,
+                    aliases: true
+                }
+            }
+        }
+    });
+
+    return result?.institution ?? null
 };
 
 export const getAllAliases = async() => {

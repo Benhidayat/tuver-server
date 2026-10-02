@@ -1,12 +1,13 @@
 import { parse } from 'tldts';
 import type { MessageUrlDetail } from "../modules/verify/verify.types.js";
+import { findPhoneNumbersInText, type CountryCode } from 'libphonenumber-js';
 
-const URL_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA-Z]{2,}(?:\/[^\s)]*)?/;
-
+const URL_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA-Z]{2,}(?:\/[^\s)]*)?/g;
+const URL_TEST_PATTERN = /\b(?:https?:\/\/)?(?:www\.)?(?:[a-zA-Z0-9-]+(?:\.|@))+[a-zA-Z]{2,}(?:\/[^\s)]*)?/;
 const IP_PATTERN = /\b(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}\b/;
 
-export const extractUrl = (message: string): string | null => {
-    return message.match(URL_PATTERN)?.[0] ?? null;
+export const extractUrls = (message: string): string[] => {
+    return message.match(URL_PATTERN) ?? [];
 };
 
 const hasIpAddress = (message: string): boolean => {
@@ -37,37 +38,41 @@ const containUrlInQuery = (url: string): boolean => {
             } catch {
                 return false;
             }
-            return URL_PATTERN.test(value);
+            return URL_TEST_PATTERN.test(value);
         });
     } catch {
         return false;
     }
 };
 
-export const getMessageUrlDetail = (message: string): MessageUrlDetail => {
+export const getMessageUrlDetail = (message: string, country: CountryCode): MessageUrlDetail => {
 
-    const extractedUrl = extractUrl(message);
+    const extractedUrls = extractUrls(message);
     const hasIp = hasIpAddress(message);
     const textWithoutUrl = extractedMessage(message);
+    const numberFound = findPhoneNumbersInText(message, country);
 
-    if (!extractedUrl) {
+    if (extractedUrls.length === 0) {
         return {
-            domain: null,
+            parsedUrls: [],
             hasIp,
-            subdomains: [],
             hasNestedUrl: false,
             textWithoutUrl,
+            numberFound
         }
     }
 
-    const parsedUrl = parse(extractedUrl);
-    const hasNestedUrl = containUrlInQuery(extractedUrl);
+    // const parsedUrl = parse(extractedUrl);
+    const parsedUrls = extractedUrls.map(url => {
+        return parse(url);
+    })
+    const hasNestedUrl = extractedUrls.some(containUrlInQuery);
 
     return {
-        domain: parsedUrl.domain,
+        parsedUrls: parsedUrls,
         hasIp,
         hasNestedUrl,
-        subdomains: parsedUrl.subdomain?.split('.') ?? [],
-        textWithoutUrl
+        textWithoutUrl,
+        numberFound
     };
 };
